@@ -62,7 +62,7 @@ public class Main extends Indent {
     public static void showReceiptsForElectricity() {
         System.out.println("Квитанции за электроэнергию");
         for (ReceiptForElectricity receiptForElectricity : receiptsForElectricity)
-            System.out.println(receiptForElectricity.toString());
+            System.out.println(receiptForElectricity);
         showEmptyParagraph();
     }
 
@@ -78,7 +78,7 @@ public class Main extends Indent {
 
     public static void showReceiptForElectricityUpSum(ReceiptForElectricity receiptForElectricity, double upSum) {
         if (receiptForElectricity.getSum() <= upSum) {
-            System.out.println(receiptForElectricity.toString());
+            System.out.println(receiptForElectricity);
             isFound = true;
         }
     }
@@ -89,9 +89,9 @@ public class Main extends Indent {
     }
 
     public static void showReceiptsHotWater() {
-        System.out.println("Квитанции за электроэнергию");
+        System.out.println("Квитанции за горячее водоснабжение");
         for (ReceiptHotWater receiptHotWater : receiptsHotWater)
-            System.out.println(receiptHotWater.toString());
+            System.out.println(receiptHotWater);
         showEmptyParagraph();
     }
 
@@ -99,7 +99,7 @@ public class Main extends Indent {
         System.out.println("Перечень квитанций за горячее водоснабжение,\n" +
                 "потраченное количество воды согласно которым не является максимальным\n" +
                 "среди всех квитанций за горячее водоснабжение");
-        maxReceiptHotWater = receiptsHotWater.get(0);
+        findMaxWaterSpent();
         isFound = false;
         for (ReceiptHotWater receiptHotWater : receiptsHotWater)
             showReceiptForHotWaterWithNonMaxCosts(receiptHotWater);
@@ -108,14 +108,22 @@ public class Main extends Indent {
     }
 
     public static void showReceiptForHotWaterWithNonMaxCosts(ReceiptHotWater receiptHotWater) {
-        if (receiptHotWater.getWaterSpent() < maxReceiptHotWater.getWaterSpent()) {
-            System.out.println(receiptHotWater.toString());
-            isFound = true;
-        } else if (receiptHotWater.getWaterSpent() != maxReceiptHotWater.getWaterSpent()) {
-            System.out.println(maxReceiptHotWater.toString());
-            maxReceiptHotWater = receiptHotWater;
+        boolean isLessMaxWaterSpent = receiptHotWater.getWaterSpent() < maxReceiptHotWater.getWaterSpent();
+        if (isLessMaxWaterSpent) {
+            System.out.println(receiptHotWater);
             isFound = true;
         }
+    }
+
+    public static void findMaxWaterSpent() {
+        maxReceiptHotWater = receiptsHotWater.get(0);
+        for (ReceiptHotWater receiptHotWater : receiptsHotWater)
+            setMaxWaterSpent(receiptHotWater);
+    }
+
+    public static void setMaxWaterSpent(ReceiptHotWater receiptHotWater) {
+        if (receiptHotWater.getWaterSpent() > maxReceiptHotWater.getWaterSpent())
+            maxReceiptHotWater = receiptHotWater;
     }
 }
 
